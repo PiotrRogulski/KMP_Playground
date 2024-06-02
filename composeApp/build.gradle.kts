@@ -61,6 +61,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
+            implementation(libs.material.kolor)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
