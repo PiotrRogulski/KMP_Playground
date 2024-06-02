@@ -1,9 +1,9 @@
 package navigation
 
-import androidx.compose.material.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,13 +21,17 @@ fun AppNavHost() {
 
     CompositionLocalProvider(LocalNavController provides navController) {
         Scaffold(bottomBar = {
-            BottomNavigation {
+            BottomAppBar {
                 val stackEntry by navController.currentBackStackEntryAsState()
                 BottomNavEntry.entries.forEach { entry ->
                     val selected = stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true
-                    BottomNavigationItem(
+                    NavigationBarItem(
                         selected = selected,
-                        onClick = { navController.navigate(entry.route.path) },
+                        onClick = {
+                            if (!selected) {
+                                navController.navigate(entry.route.path)
+                            }
+                        },
                         label = { Text(entry.label) },
                         icon = entry.icon,
                     )
