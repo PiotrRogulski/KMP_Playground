@@ -70,7 +70,7 @@ kotlin {
 }
 
 android {
-    namespace = "org.example.kmm_playground"
+    namespace = "org.example.kmp_playground"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -78,7 +78,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "org.example.kmm_playground"
+        applicationId = "org.example.kmp_playground"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -112,7 +112,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.example.kmm_playground"
+            packageName = "org.example.kmp_playground"
             packageVersion = "1.0.0"
         }
     }

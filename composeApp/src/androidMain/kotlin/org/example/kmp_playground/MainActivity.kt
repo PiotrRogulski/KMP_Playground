@@ -1,4 +1,4 @@
-package org.example.kmm_playground
+package org.example.kmp_playground
 
 import App
 import android.os.Bundle
