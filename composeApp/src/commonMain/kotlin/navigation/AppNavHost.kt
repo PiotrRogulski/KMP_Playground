@@ -1,10 +1,12 @@
 package navigation
 
+import androidx.compose.animation.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
@@ -38,7 +40,12 @@ fun AppNavHost() {
                 }
             }
         }) {
-            NavHost(navController, startDestination = Route.Home.path) {
+            NavHost(
+                navController,
+                startDestination = Route.Home.path,
+                enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
+                exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
+            ) {
                 composable(route = Route.Home.path) { HomeScreen() }
                 navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
                     composable(route = Route.Endpoints.List.path) { EndpointList() }
