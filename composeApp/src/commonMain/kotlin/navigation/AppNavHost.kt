@@ -48,6 +48,8 @@ fun AppNavHost() {
                 startDestination = Route.Home.path,
                 enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
                 exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
+                popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
+                popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
             ) {
                 composable(route = Route.Home.path) { HomeScreen() }
                 navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
