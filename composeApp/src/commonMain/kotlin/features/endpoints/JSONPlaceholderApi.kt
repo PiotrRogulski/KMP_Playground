@@ -20,7 +20,6 @@ class JSONPlaceholderApi {
         }
     }
 
-    suspend fun getUsers(): Array<User> {
-        return client.get("users").body()
-    }
+    suspend fun getUsers(): Array<User> = client.get("users").body()
+
 }

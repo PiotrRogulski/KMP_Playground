@@ -1,6 +1,7 @@
 package features.endpoints
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -13,18 +14,16 @@ fun EndpointList() {
     val navController = LocalNavController.current
 
     AppScaffold(title = "Endpoints") {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            for ((name, route) in endpoints) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { navController.navigate(route.path) },
-                ) {
-                    Text(
-                        name,
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                }
+        items(endpoints) { (name, route) ->
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate(route.path) },
+            ) {
+                Text(
+                    name,
+                    modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
             }
         }
     }

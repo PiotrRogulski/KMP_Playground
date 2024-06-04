@@ -2,6 +2,7 @@ package common.widgets
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
@@ -15,7 +16,7 @@ import navigation.*
 @Composable
 fun AppScaffold(
     title: String,
-    content: @Composable () -> Unit,
+    content: LazyListScope.() -> Unit,
 ) {
     val navController = LocalNavController.current
     val canPop by remember { derivedStateOf { navController.previousBackStackEntry != null } }
@@ -34,9 +35,9 @@ fun AppScaffold(
             )
         },
     ) { padding ->
-        Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
-                .padding(padding + PaddingValues(16.dp)),
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            contentPadding = PaddingValues(16.dp),
         ) { content() }
     }
 }
