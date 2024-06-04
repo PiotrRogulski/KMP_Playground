@@ -14,6 +14,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
 import androidx.navigation.compose.navigation
 import features.endpoints.*
+import features.endpoints.json_placeholder.screens.*
 import features.home.*
 import features.settings.*
 
@@ -54,6 +55,7 @@ fun AppNavHost() {
                 composable(route = Route.Home.path) { HomeScreen() }
                 navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
                     composable(route = Route.Endpoints.List.path) { EndpointList() }
+                    composable(route = Route.Endpoints.Users.path) { Users() }
                 }
                 composable(route = Route.Settings.path) { SettingsScreen() }
             }
