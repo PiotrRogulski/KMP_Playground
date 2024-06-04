@@ -1,11 +1,13 @@
 package navigation
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -39,9 +41,10 @@ fun AppNavHost() {
                     )
                 }
             }
-        }) {
+        }) { padding ->
             NavHost(
                 navController,
+                modifier = Modifier.padding(padding),
                 startDestination = Route.Home.path,
                 enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
                 exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
