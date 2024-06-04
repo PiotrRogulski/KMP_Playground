@@ -63,6 +63,10 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
             implementation(libs.material.kolor)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
