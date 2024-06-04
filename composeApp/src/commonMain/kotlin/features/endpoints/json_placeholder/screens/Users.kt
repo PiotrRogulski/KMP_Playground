@@ -17,7 +17,15 @@ fun Users() {
     AppScaffold(title = "Users") {
         when (users) {
             is UiState.Initial -> {}
-            is UiState.Loading -> item { CircularProgressIndicator() }
+            is UiState.Loading -> item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
             is UiState.Error -> item { Text(users.error.toString()) }
             is UiState.Success -> {
                 itemsIndexed(users.data) { index, user ->
