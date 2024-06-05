@@ -4,9 +4,7 @@ import common.*
 import features.endpoints.*
 import kotlinx.coroutines.flow.*
 
-class JSONPlaceholderRepository {
-    private val api = JSONPlaceholderApi()
-
+class JSONPlaceholderRepository(private val api: JSONPlaceholderApi) {
     private fun <T> createFlow(callback: suspend () -> T) = flow {
         emit(UiState.Loading())
         try {

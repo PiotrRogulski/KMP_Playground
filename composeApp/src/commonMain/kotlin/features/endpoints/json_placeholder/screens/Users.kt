@@ -9,10 +9,11 @@ import androidx.compose.ui.unit.*
 import common.*
 import common.widgets.*
 import features.endpoints.json_placeholder.*
+import org.koin.compose.*
 
 @Composable
-fun Users() {
-    val users = collectUiState { JSONPlaceholderRepository().users }
+fun Users(repository: JSONPlaceholderRepository = koinInject()) {
+    val users = collectUiState { repository.users }
 
     AppScaffold(title = "Users") {
         when (users) {
