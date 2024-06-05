@@ -13,10 +13,6 @@ import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
 import androidx.navigation.compose.navigation
-import features.endpoints.*
-import features.endpoints.json_placeholder.screens.users.*
-import features.home.*
-import features.settings.*
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
 
@@ -52,12 +48,15 @@ fun AppNavHost() {
                 popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
                 popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
             ) {
-                composable(route = Route.Home.path) { HomeScreen() }
-                navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
-                    composable(route = Route.Endpoints.List.path) { EndpointList() }
-                    composable(route = Route.Endpoints.Users.path) { Users() }
+                with(Route.Home) { composable(path) { screen() } }
+                with(Route.Endpoints) {
+                    navigation(route = path, startDestination = Route.Endpoints.List.path) {
+                        with(Route.Endpoints.List) { composable(path) { screen() } }
+                        with(Route.Endpoints.Users) { composable(path) { screen() } }
+                        with(Route.Endpoints.UserByID) { composable(path) { screen(it) } }
+                    }
                 }
-                composable(route = Route.Settings.path) { SettingsScreen() }
+                with(Route.Settings) { composable(path) { screen() } }
             }
         }
     }

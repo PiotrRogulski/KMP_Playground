@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 import org.koin.compose.*
 
 @Composable
-fun Users(repository: JSONPlaceholderRepository = koinInject()) {
+fun UsersScreen(repository: JSONPlaceholderRepository = koinInject()) {
     val users = collectUiState { repository.users }
 
     val snackHostState = remember { SnackbarHostState() }

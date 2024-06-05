@@ -1,12 +1,41 @@
 package navigation
 
-sealed class Route(val path: String) {
-    data object Home : Route("home")
+import androidx.compose.runtime.*
+import androidx.navigation.*
+import features.endpoints.*
+import features.endpoints.json_placeholder.screens.user_by_id.*
+import features.endpoints.json_placeholder.screens.users.*
+import features.home.*
+import features.settings.*
 
-    data object Endpoints : Route("data") {
-        data object List : Route("list")
-        data object Users : Route("users")
+sealed class Route(val path: String) {
+    data object Home : Route("home") {
+        @Composable
+        fun screen() = HomeScreen()
     }
 
-    data object Settings : Route("settings")
+    data object Endpoints : Route("data") {
+        data object List : Route("list") {
+            @Composable
+            fun screen() = EndpointList()
+        }
+
+        data object Users : Route("users") {
+            @Composable
+            fun screen() = UsersScreen()
+        }
+
+        data object UserByID : Route("user_by_id/{userID}") {
+            fun createRoute(userID: String) = "user_by_id/$userID"
+
+            @Composable
+            fun screen(entry: NavBackStackEntry) =
+                UserByID(entry.arguments?.getString("userID") ?: error("No userID provided"))
+        }
+    }
+
+    data object Settings : Route("settings") {
+        @Composable
+        fun screen() = SettingsScreen()
+    }
 }
