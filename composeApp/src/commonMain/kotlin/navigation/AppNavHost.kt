@@ -14,7 +14,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
 import androidx.navigation.compose.navigation
 import features.endpoints.*
-import features.endpoints.json_placeholder.screens.*
+import features.endpoints.json_placeholder.screens.users.*
 import features.home.*
 import features.settings.*
 

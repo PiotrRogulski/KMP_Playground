@@ -1,4 +1,4 @@
-package features.endpoints.json_placeholder.screens
+package features.endpoints.json_placeholder.screens.users
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -30,15 +30,8 @@ fun Users(repository: JSONPlaceholderRepository = koinInject()) {
             is UiState.Error -> item { Text(users.error.toString()) }
             is UiState.Success -> {
                 itemsIndexed(users.data) { index, user ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth().padding(top = if (index == 0) 0.dp else 16.dp),
-                        onClick = {},
-                    ) {
-                        Text(
-                            user.name,
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
+                    Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
+                        UserCard(user)
                     }
                 }
 
