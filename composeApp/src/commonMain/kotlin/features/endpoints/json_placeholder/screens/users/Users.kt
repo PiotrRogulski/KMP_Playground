@@ -9,13 +9,27 @@ import androidx.compose.ui.unit.*
 import common.*
 import common.widgets.*
 import features.endpoints.json_placeholder.*
+import kotlinx.coroutines.*
 import org.koin.compose.*
 
 @Composable
 fun Users(repository: JSONPlaceholderRepository = koinInject()) {
     val users = collectUiState { repository.users }
 
-    AppScaffold(title = "Users") {
+    val snackHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    fun showSnackbar(message: String) {
+        scope.launch {
+            snackHostState.currentSnackbarData?.dismiss()
+            snackHostState.showSnackbar(message, withDismissAction = true)
+        }
+    }
+
+    AppScaffold(
+        title = "Users",
+        snackbarHost = { SnackbarHost(hostState = snackHostState) },
+    ) {
         when (users) {
             is UiState.Initial -> {}
             is UiState.Loading -> item {
@@ -31,7 +45,12 @@ fun Users(repository: JSONPlaceholderRepository = koinInject()) {
             is UiState.Success -> {
                 itemsIndexed(users.data) { index, user ->
                     Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
-                        UserCard(user)
+                        UserCard(
+                            user,
+                            onCallPressed = { showSnackbar("Calling $it") },
+                            onWebsitePressed = { showSnackbar("Opening $it") },
+                            onAddressPressed = { showSnackbar("Navigating to $it") },
+                        )
                     }
                 }
 
