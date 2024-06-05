@@ -13,10 +13,18 @@ fun UserCard(user: User) {
         modifier = Modifier.fillMaxWidth(),
         onClick = {},
     ) {
-        Text(
-            user.name,
+        Column(
             modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodyLarge,
-        )
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                user.name,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Text(
+                user.email,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
     }
 }
