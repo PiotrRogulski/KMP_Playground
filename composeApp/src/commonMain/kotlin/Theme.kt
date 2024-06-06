@@ -3,7 +3,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
 import com.materialkolor.*
 import features.settings.*
-import kotlinx.serialization.json.JsonNull.content
 import org.koin.compose.*
 
 val seedColor = Color(0xFFFF00FF)
@@ -21,9 +20,9 @@ fun AppTheme(
         // Maybe TODO: allow configuring the seed color?
         seedColor,
         isDark = when (themeMode) {
-            ThemeMode.SYSTEM -> isSystemInDarkTheme()
-            ThemeMode.LIGHT -> false
-            ThemeMode.DARK -> true
+            ThemeMode.System -> isSystemInDarkTheme()
+            ThemeMode.Light -> false
+            ThemeMode.Dark -> true
         },
         style = style,
         contrastLevel = contrastLevel.value,

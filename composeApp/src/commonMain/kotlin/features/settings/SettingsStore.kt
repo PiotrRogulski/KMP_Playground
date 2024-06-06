@@ -5,7 +5,7 @@ import com.materialkolor.*
 
 // TODO: add persistence
 class SettingsStore {
-    val themeMode = mutableStateOf(ThemeMode.SYSTEM)
+    val themeMode = mutableStateOf(ThemeMode.System)
 
     val themeStyle = mutableStateOf(PaletteStyle.Fidelity)
 
@@ -13,7 +13,7 @@ class SettingsStore {
 }
 
 enum class ThemeMode {
-    SYSTEM,
-    LIGHT,
-    DARK,
+    System,
+    Light,
+    Dark,
 }
