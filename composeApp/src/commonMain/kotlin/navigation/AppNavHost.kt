@@ -8,20 +8,33 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
 import androidx.navigation.compose.navigation
+import common.*
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(windowClass: WindowClass) {
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        Scaffold(bottomBar = {
+        when (windowClass) {
+            WindowClass.Small -> NavShellSmall(navController)
+            WindowClass.Medium -> NavShellMedium(navController)
+            WindowClass.Large -> TODO()
+        }
+    }
+}
+
+@Composable
+private fun NavShellSmall(navController: NavHostController) {
+    Scaffold(
+        bottomBar = {
             BottomAppBar {
                 val stackEntry by navController.currentBackStackEntryAsState()
                 BottomNavEntry.entries.forEach { entry ->
@@ -38,7 +51,42 @@ fun AppNavHost() {
                     )
                 }
             }
-        }) { padding -> NavContent(navController, modifier = Modifier.padding(padding)) }
+        },
+    ) { padding -> NavContent(navController, modifier = Modifier.padding(padding)) }
+}
+
+@Composable
+private fun NavShellMedium(navController: NavHostController) {
+    Scaffold {
+        Row {
+            NavigationRail {
+                val stackEntry by navController.currentBackStackEntryAsState()
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    BottomNavEntry.entries.forEachIndexed { index, entry ->
+                        val selected =
+                            stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true
+                        if (index > 0) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        NavigationRailItem(
+                            selected = selected,
+                            onClick = {
+                                if (!selected) {
+                                    navController.navigate(entry.route.path)
+                                }
+                            },
+                            label = { Text(entry.label) },
+                            icon = entry.icon,
+                        )
+                    }
+
+                }
+            }
+            NavContent(navController, modifier = Modifier.clipToBounds())
+        }
     }
 }
 
