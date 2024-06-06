@@ -1,6 +1,7 @@
 package navigation
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
@@ -26,17 +27,18 @@ fun AppNavHost(windowClass: WindowClass) {
         when (windowClass) {
             WindowClass.Small -> NavShellSmall(navController)
             WindowClass.Medium -> NavShellMedium(navController)
-            WindowClass.Large -> TODO()
+            WindowClass.Large -> NavShellLarge(navController)
         }
     }
 }
 
 @Composable
 private fun NavShellSmall(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
     Scaffold(
         bottomBar = {
             BottomAppBar {
-                val stackEntry by navController.currentBackStackEntryAsState()
                 BottomNavEntry.entries.forEach { entry ->
                     val selected = stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true
                     NavigationBarItem(
@@ -57,10 +59,11 @@ private fun NavShellSmall(navController: NavHostController) {
 
 @Composable
 private fun NavShellMedium(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
     Scaffold {
         Row {
             NavigationRail {
-                val stackEntry by navController.currentBackStackEntryAsState()
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
@@ -87,6 +90,34 @@ private fun NavShellMedium(navController: NavHostController) {
             }
             NavContent(navController, modifier = Modifier.clipToBounds())
         }
+    }
+}
+
+@Composable
+fun NavShellLarge(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
+    Scaffold {
+        PermanentNavigationDrawer(
+            drawerContent = {
+                PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState()),
+                    ) {
+                        Spacer(modifier = Modifier.height(12.dp))
+                        BottomNavEntry.entries.forEach { entry ->
+                            NavigationDrawerItem(
+                                modifier = Modifier.padding(horizontal = 12.dp),
+                                selected = stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true,
+                                onClick = { navController.navigate(entry.route.path) },
+                                label = { Text(entry.label) },
+                                icon = entry.icon,
+                            )
+                        }
+                    }
+                }
+            },
+        ) { NavContent(navController, modifier = Modifier.clipToBounds()) }
     }
 }
 

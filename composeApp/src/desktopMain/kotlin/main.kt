@@ -1,8 +1,9 @@
+import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import common.*
 
 fun main() = application {
-    val windowState = rememberWindowState()
+    val windowState = rememberWindowState(size = DpSize(1280.dp, 720.dp))
 
     Window(
         onCloseRequest = ::exitApplication,
