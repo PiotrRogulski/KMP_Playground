@@ -1,15 +1,15 @@
 package features.settings
 
+import androidx.compose.runtime.*
 import com.materialkolor.*
-import kotlinx.coroutines.flow.*
 
 // TODO: add persistence
 class SettingsStore {
-    val themeMode = MutableStateFlow(ThemeMode.SYSTEM)
+    val themeMode = mutableStateOf(ThemeMode.SYSTEM)
 
-    val themeStyle = MutableStateFlow(PaletteStyle.Fidelity)
+    val themeStyle = mutableStateOf(PaletteStyle.Fidelity)
 
-    val contrastLevel = MutableStateFlow(Contrast.Default)
+    val contrastLevel = mutableStateOf(Contrast.Default)
 }
 
 enum class ThemeMode {

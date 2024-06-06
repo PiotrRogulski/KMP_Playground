@@ -13,9 +13,9 @@ fun AppTheme(
     settingsStore: SettingsStore = koinInject(),
     content: @Composable () -> Unit,
 ) {
-    val themeMode by settingsStore.themeMode.collectAsState()
-    val style by settingsStore.themeStyle.collectAsState()
-    val contrastLevel by settingsStore.contrastLevel.collectAsState()
+    val themeMode by settingsStore.themeMode
+    val style by settingsStore.themeStyle
+    val contrastLevel by settingsStore.contrastLevel
 
     val themeState = rememberDynamicMaterialThemeState(
         // Maybe TODO: allow configuring the seed color?
