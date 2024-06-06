@@ -38,27 +38,30 @@ fun AppNavHost() {
                     )
                 }
             }
-        }) { padding ->
-            NavHost(
-                navController,
-                modifier = Modifier.padding(padding),
-                startDestination = Route.Home.path,
-                enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
-                exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
-                popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
-                popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
-            ) {
-                with(Route.Home) { composable(path) { screen() } }
-                with(Route.Endpoints) {
-                    navigation(route = path, startDestination = Route.Endpoints.List.path) {
-                        with(Route.Endpoints.List) { composable(path) { screen() } }
-                        with(Route.Endpoints.Users) { composable(path) { screen() } }
-                        with(Route.Endpoints.UserByID) { composable(path) { screen(it) } }
-                    }
-                }
-                with(Route.Settings) { composable(path) { screen() } }
+        }) { padding -> NavContent(navController, modifier = Modifier.padding(padding)) }
+    }
+}
+
+@Composable
+private fun NavContent(navController: NavHostController, modifier: Modifier = Modifier) {
+    NavHost(
+        navController,
+        modifier = modifier,
+        startDestination = Route.Home.path,
+        enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
+        exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
+        popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
+        popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
+    ) {
+        with(Route.Home) { composable(path) { screen() } }
+        with(Route.Endpoints) {
+            navigation(route = path, startDestination = Route.Endpoints.List.path) {
+                with(Route.Endpoints.List) { composable(path) { screen() } }
+                with(Route.Endpoints.Users) { composable(path) { screen() } }
+                with(Route.Endpoints.UserByID) { composable(path) { screen(it) } }
             }
         }
+        with(Route.Settings) { composable(path) { screen() } }
     }
 }
 
