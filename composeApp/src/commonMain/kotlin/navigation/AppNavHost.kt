@@ -24,100 +24,98 @@ fun AppNavHost(windowClass: WindowClass) {
     val navController = rememberNavController()
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        when (windowClass) {
-            WindowClass.Small -> NavShellSmall(navController)
-            WindowClass.Medium -> NavShellMedium(navController)
-            WindowClass.Large -> NavShellLarge(navController)
-        }
-    }
-}
-
-@Composable
-private fun NavShellSmall(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
-    Scaffold(
-        bottomBar = {
-            BottomAppBar {
-                BottomNavEntry.entries.forEach { entry ->
-                    val selected = stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            if (!selected) {
-                                navController.navigate(entry.route.path)
-                            }
-                        },
-                        label = { Text(entry.label) },
-                        icon = entry.icon,
-                    )
-                }
-            }
-        },
-    ) { padding -> NavContent(navController, modifier = Modifier.padding(padding)) }
-}
-
-@Composable
-private fun NavShellMedium(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
-    Scaffold {
-        Row {
-            NavigationRail {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    BottomNavEntry.entries.forEachIndexed { index, entry ->
-                        val selected =
-                            stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true
-                        if (index > 0) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        NavigationRailItem(
-                            selected = selected,
-                            onClick = {
-                                if (!selected) {
-                                    navController.navigate(entry.route.path)
-                                }
-                            },
-                            label = { Text(entry.label) },
-                            icon = entry.icon,
-                        )
-                    }
-
-                }
-            }
-            NavContent(navController, modifier = Modifier.clipToBounds())
-        }
-    }
-}
-
-@Composable
-fun NavShellLarge(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
-    Scaffold {
-        PermanentNavigationDrawer(
-            drawerContent = {
-                PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState()),
-                    ) {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        BottomNavEntry.entries.forEach { entry ->
-                            NavigationDrawerItem(
-                                modifier = Modifier.padding(horizontal = 12.dp),
-                                selected = stackEntry?.destination?.hierarchy?.any { it.route == entry.route.path } == true,
-                                onClick = { navController.navigate(entry.route.path) },
-                                label = { Text(entry.label) },
-                                icon = entry.icon,
-                            )
-                        }
-                    }
+        Scaffold(
+            bottomBar = {
+                if (windowClass == WindowClass.Small) {
+                    BottomNavBar(navController)
                 }
             },
-        ) { NavContent(navController, modifier = Modifier.clipToBounds()) }
+        ) { padding ->
+            Row {
+                if (windowClass == WindowClass.Medium) {
+                    NavRail(navController)
+                }
+                if (windowClass == WindowClass.Large) {
+                    NavDrawer(navController)
+                }
+                NavContent(navController, modifier = Modifier.padding(padding).clipToBounds())
+            }
+        }
+    }
+}
+
+@Composable
+private fun BottomNavBar(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
+    BottomAppBar {
+        NavEntry.entries.forEach { entry ->
+            val selected = entry.isSelected(stackEntry)
+            NavigationBarItem(
+                selected = selected,
+                onClick = {
+                    if (!selected) {
+                        navController.navigate(entry.route.path)
+                    }
+                },
+                label = { Text(entry.label) },
+                icon = entry.icon,
+            )
+        }
+    }
+}
+
+@Composable
+private fun NavRail(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
+    NavigationRail {
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            NavEntry.entries.forEachIndexed { index, entry ->
+                if (index > 0) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                val selected = entry.isSelected(stackEntry)
+                NavigationRailItem(
+                    selected = selected,
+                    onClick = {
+                        if (!selected) {
+                            navController.navigate(entry.route.path)
+                        }
+                    },
+                    label = { Text(entry.label) },
+                    icon = entry.icon,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavDrawer(navController: NavHostController) {
+    val stackEntry by navController.currentBackStackEntryAsState()
+
+    PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
+            NavEntry.entries.forEach { entry ->
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    selected = entry.isSelected(stackEntry),
+                    onClick = {
+                        navController.navigate(entry.route.path)
+                    },
+                    label = { Text(entry.label) },
+                    icon = entry.icon,
+                )
+            }
+        }
     }
 }
 
@@ -144,7 +142,7 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
     }
 }
 
-enum class BottomNavEntry(
+private enum class NavEntry(
     val route: Route,
     val label: String,
     val icon: @Composable () -> Unit,
@@ -163,5 +161,8 @@ enum class BottomNavEntry(
         Route.Settings,
         "Settings",
         { Icon(imageVector = Icons.Rounded.Settings, contentDescription = null) },
-    ),
+    );
+
+    fun isSelected(stackEntry: NavBackStackEntry?) =
+        stackEntry?.destination?.hierarchy?.any { it.route == route.path } == true
 }
