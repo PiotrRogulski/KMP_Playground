@@ -22,21 +22,22 @@ val LocalNavController = compositionLocalOf<NavController> { error("No NavContro
 @Composable
 fun AppNavHost(windowClass: WindowClass) {
     val navController = rememberNavController()
+    val stackEntry by navController.currentBackStackEntryAsState()
 
     CompositionLocalProvider(LocalNavController provides navController) {
         Scaffold(
             bottomBar = {
                 if (windowClass == WindowClass.Small) {
-                    BottomNavBar(navController)
+                    BottomNavBar(navController, stackEntry)
                 }
             },
         ) { padding ->
             Row {
                 if (windowClass == WindowClass.Medium) {
-                    NavRail(navController)
+                    NavRail(navController, stackEntry)
                 }
                 if (windowClass == WindowClass.Large) {
-                    NavDrawer(navController)
+                    NavDrawer(navController, stackEntry)
                 }
                 NavContent(navController, modifier = Modifier.padding(padding).clipToBounds())
             }
@@ -45,9 +46,7 @@ fun AppNavHost(windowClass: WindowClass) {
 }
 
 @Composable
-private fun BottomNavBar(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
+private fun BottomNavBar(navController: NavHostController, stackEntry: NavBackStackEntry?) {
     BottomAppBar {
         NavEntry.entries.forEach { entry ->
             val selected = entry.isSelected(stackEntry)
@@ -66,9 +65,7 @@ private fun BottomNavBar(navController: NavHostController) {
 }
 
 @Composable
-private fun NavRail(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
+private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEntry?) {
     NavigationRail {
         Column(
             modifier = Modifier.fillMaxHeight(),
@@ -96,9 +93,7 @@ private fun NavRail(navController: NavHostController) {
 }
 
 @Composable
-private fun NavDrawer(navController: NavHostController) {
-    val stackEntry by navController.currentBackStackEntryAsState()
-
+private fun NavDrawer(navController: NavHostController, stackEntry: NavBackStackEntry?) {
     PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()),
