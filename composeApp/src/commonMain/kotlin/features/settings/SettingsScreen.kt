@@ -7,7 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import com.materialkolor.*
+import common.*
 import common.widgets.*
+import kmp_playground.composeapp.generated.resources.*
+import kmp_playground.composeapp.generated.resources.Res
 import org.koin.compose.*
 
 @Composable
@@ -16,9 +19,9 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
     var themeStyle by settingsStore.themeStyle
     var contrastLevel by settingsStore.contrastLevel
 
-    AppScaffold(title = "Settings") {
+    AppScaffold(title = Res.string.settings_title.str) {
         chipSection(
-            title = "Theme Mode",
+            title = { Res.string.settings_themeMode.str },
             items = ThemeMode.entries,
             isSelected = { it == themeMode },
             onItemSelected = { themeMode = it },
@@ -26,7 +29,7 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
         )
         item { Spacer(Modifier.height(16.dp)) }
         chipSection(
-            title = "Theme Style",
+            title = { Res.string.settings_themeStyle.str },
             items = PaletteStyle.entries,
             isSelected = { it == themeStyle },
             onItemSelected = { themeStyle = it },
@@ -34,7 +37,7 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
         )
         item { Spacer(Modifier.height(16.dp)) }
         chipSection(
-            title = "Contrast Level",
+            title = { Res.string.settings_contrastLevel.str },
             items = Contrast.entries.sortedBy { it.value },
             isSelected = { it == contrastLevel },
             onItemSelected = { contrastLevel = it },
@@ -45,7 +48,7 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
 
 @OptIn(ExperimentalLayoutApi::class)
 private fun <T> LazyListScope.chipSection(
-    title: String,
+    title: @Composable () -> String,
     items: List<T>,
     isSelected: (T) -> Boolean,
     onItemSelected: (T) -> Unit,
@@ -54,7 +57,7 @@ private fun <T> LazyListScope.chipSection(
     item {
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                Text(title)
+                Text(title())
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items.forEach { item ->
                         ElevatedFilterChip(

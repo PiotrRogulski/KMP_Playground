@@ -125,3 +125,7 @@ compose.desktop {
         }
     }
 }
+
+compose.resources {
+    generateResClass = always
+}
