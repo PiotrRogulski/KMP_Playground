@@ -23,7 +23,7 @@ fun AppScaffold(
     Scaffold(
         snackbarHost = snackbarHost,
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
                 title = { Text(title) },
                 navigationIcon = {
                     if (canPop) {
