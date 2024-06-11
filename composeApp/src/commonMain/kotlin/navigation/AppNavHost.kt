@@ -126,12 +126,10 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
         popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
     ) {
         with(Route.Home) { composable(path) { screen() } }
-        with(Route.Endpoints) {
-            navigation(route = path, startDestination = Route.Endpoints.List.path) {
-                with(Route.Endpoints.List) { composable(path) { screen() } }
-                with(Route.Endpoints.Users) { composable(path) { screen() } }
-                with(Route.Endpoints.UserByID) { composable(path, arguments) { screen(it) } }
-            }
+        navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
+            with(Route.Endpoints.List) { composable(path) { screen() } }
+            with(Route.Endpoints.Users) { composable(path) { screen() } }
+            with(Route.Endpoints.UserByID) { composable(path, arguments) { screen(it) } }
         }
         with(Route.Settings) { composable(path) { screen() } }
     }
