@@ -11,12 +11,15 @@ import androidx.compose.ui.window.*
 import common.widgets.*
 import features.endpoints.*
 import kotlinx.coroutines.*
+import navigation.*
 import org.koin.compose.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UsersScreen(api: ExampleApi = koinInject()) {
     val scope = rememberCoroutineScope()
+    val navController = LocalNavController.current
+
     val usersController =
         remember { PaginatedQueryController(perPage = 5, callback = api::getUsers) }
 
@@ -65,6 +68,7 @@ fun UsersScreen(api: ExampleApi = koinInject()) {
             Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
                 UserCard(
                     user,
+                    onClick = { navController.navigate(Route.Endpoints.UserByID.createRoute(user.id)) },
                 )
             }
         }

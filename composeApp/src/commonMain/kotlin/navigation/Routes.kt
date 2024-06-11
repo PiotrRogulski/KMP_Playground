@@ -26,11 +26,11 @@ sealed class Route(val path: String) {
         }
 
         data object UserByID : Route("user_by_id/{userID}") {
-            fun createRoute(userID: String) = "user_by_id/$userID"
+            fun createRoute(userID: Int) = "user_by_id/$userID"
 
             @Composable
             fun screen(entry: NavBackStackEntry) =
-                UserByID(entry.arguments?.getString("userID") ?: error("No userID provided"))
+                UserByID(entry.arguments?.getInt("userID") ?: error("No userID provided"))
         }
     }
 

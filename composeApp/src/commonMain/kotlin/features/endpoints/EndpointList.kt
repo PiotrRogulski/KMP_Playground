@@ -33,7 +33,10 @@ fun EndpointList() {
                 },
             ) {
                 if (userId.isNotEmpty()) {
-                    navController.navigate(Route.Endpoints.UserByID.createRoute(userId))
+                    val parsedId = userId.toIntOrNull()
+                    if (parsedId != null) {
+                        navController.navigate(Route.Endpoints.UserByID.createRoute(parsedId))
+                    }
                 }
             }
         }

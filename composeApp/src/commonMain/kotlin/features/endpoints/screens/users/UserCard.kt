@@ -12,10 +12,13 @@ import coil3.compose.AsyncImage
 import features.endpoints.models.*
 
 @Composable
-fun UserCard(user: User) {
+fun UserCard(
+    user: User,
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        onClick = {},
+        onClick = { onClick() },
         shape = RoundedCornerShape(48.dp),
     ) {
         Row(
