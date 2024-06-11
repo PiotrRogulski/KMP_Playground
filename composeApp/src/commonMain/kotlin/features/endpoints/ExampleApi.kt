@@ -28,4 +28,6 @@ class ExampleApi {
         parameter("page", page)
         parameter("per_page", perPage)
     }.body()
+
+    suspend fun getUser(id: Int): SingleResponse<User> = client.get("users/$id").body()
 }

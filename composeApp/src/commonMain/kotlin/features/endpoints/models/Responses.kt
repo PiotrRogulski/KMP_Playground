@@ -10,3 +10,6 @@ data class PaginatedResponse<T>(
     @SerialName("total_pages") val totalPages: Int,
     val data: List<T>,
 )
+
+@Serializable
+data class SingleResponse<T>(val data: T)

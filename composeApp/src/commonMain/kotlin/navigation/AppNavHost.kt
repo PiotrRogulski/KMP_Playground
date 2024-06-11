@@ -130,7 +130,7 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
             navigation(route = path, startDestination = Route.Endpoints.List.path) {
                 with(Route.Endpoints.List) { composable(path) { screen() } }
                 with(Route.Endpoints.Users) { composable(path) { screen() } }
-                with(Route.Endpoints.UserByID) { composable(path) { screen(it) } }
+                with(Route.Endpoints.UserByID) { composable(path, arguments) { screen(it) } }
             }
         }
         with(Route.Settings) { composable(path) { screen() } }

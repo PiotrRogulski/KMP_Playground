@@ -34,7 +34,7 @@ fun UserCard(
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    "${user.firstName} ${user.lastName}",
+                    "${user.firstName} ${user.lastName} (#${user.id})",
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
