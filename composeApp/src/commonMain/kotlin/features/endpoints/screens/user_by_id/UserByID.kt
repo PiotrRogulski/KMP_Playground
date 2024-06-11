@@ -1,4 +1,4 @@
-package features.endpoints.json_placeholder.screens.user_by_id
+package features.endpoints.screens.user_by_id
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

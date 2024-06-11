@@ -3,8 +3,8 @@ package navigation
 import androidx.compose.runtime.*
 import androidx.navigation.*
 import features.endpoints.*
-import features.endpoints.json_placeholder.screens.user_by_id.*
-import features.endpoints.json_placeholder.screens.users.*
+import features.endpoints.screens.user_by_id.*
+import features.endpoints.screens.users.*
 import features.home.*
 import features.settings.*
 

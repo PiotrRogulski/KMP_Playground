@@ -1,4 +1,4 @@
-package features.endpoints.json_placeholder.screens.users
+package features.endpoints.screens.users
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -8,12 +8,12 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import common.*
 import common.widgets.*
-import features.endpoints.json_placeholder.*
+import features.endpoints.*
 import kotlinx.coroutines.*
 import org.koin.compose.*
 
 @Composable
-fun UsersScreen(repository: JSONPlaceholderRepository = koinInject()) {
+fun UsersScreen(repository: ExampleRepository = koinInject()) {
     val users = collectUiState { repository.users }
 
     val snackHostState = remember { SnackbarHostState() }
@@ -43,13 +43,10 @@ fun UsersScreen(repository: JSONPlaceholderRepository = koinInject()) {
 
             is UiState.Error -> item { Text(users.error.toString()) }
             is UiState.Success -> {
-                itemsIndexed(users.data) { index, user ->
+                itemsIndexed(users.data.data) { index, user ->
                     Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
                         UserCard(
                             user,
-                            onCallPressed = { showSnackbar("Calling $it") },
-                            onWebsitePressed = { showSnackbar("Opening $it") },
-                            onAddressPressed = { showSnackbar("Navigating to $it") },
                         )
                     }
                 }

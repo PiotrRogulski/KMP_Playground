@@ -1,10 +1,9 @@
-package features.endpoints.json_placeholder
+package features.endpoints
 
 import common.*
-import features.endpoints.*
 import kotlinx.coroutines.flow.*
 
-class JSONPlaceholderRepository(private val api: JSONPlaceholderApi) {
+class ExampleRepository(private val api: ExampleApi) {
     private fun <T> createFlow(callback: suspend () -> T) = flow {
         emit(UiState.Loading())
         try {
