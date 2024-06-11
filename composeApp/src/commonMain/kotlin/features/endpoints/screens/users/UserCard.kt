@@ -6,18 +6,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.*
 import coil3.compose.AsyncImage
 import features.endpoints.models.*
 
 @Composable
-fun UserCard(
-    user: User,
-) {
+fun UserCard(user: User) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = {},
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(48.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -25,9 +24,10 @@ fun UserCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(16.dp)),
+                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(32.dp)),
                 model = user.avatar,
                 contentDescription = "User avatar",
+                contentScale = ContentScale.Crop,
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
