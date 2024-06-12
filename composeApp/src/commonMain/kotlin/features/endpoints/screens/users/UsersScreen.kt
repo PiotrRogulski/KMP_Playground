@@ -76,6 +76,7 @@ fun UsersScreen(api: ExampleApi = koinInject()) {
             item {
                 Button(
                     onClick = { scope.launch { usersController.loadNextPage() } },
+                    enabled = !loading,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                 ) {
                     Text("Load more")
