@@ -10,6 +10,8 @@ class SettingsStore {
     val themeStyle = mutableStateOf(PaletteStyle.Fidelity)
 
     val contrastLevel = mutableStateOf(Contrast.Default)
+
+    val pureBlack = mutableStateOf(false)
 }
 
 enum class ThemeMode {

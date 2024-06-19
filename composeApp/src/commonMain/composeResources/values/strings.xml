@@ -1,6 +1,7 @@
 <resources>
     <string name="settings_title">Settings</string>
     <string name="settings_themeMode">Theme mode</string>
+    <string name="settings_pureBlack">Pure black</string>
     <string name="settings_themeStyle">Theme style</string>
     <string name="settings_contrastLevel">Contrast level</string>
 </resources>

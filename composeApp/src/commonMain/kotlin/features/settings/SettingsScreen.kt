@@ -18,6 +18,7 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
     var themeMode by settingsStore.themeMode
     var themeStyle by settingsStore.themeStyle
     var contrastLevel by settingsStore.contrastLevel
+    var pureBlack by settingsStore.pureBlack
 
     AppScaffold(title = Res.string.settings_title.str) {
         chipSection(
@@ -26,6 +27,12 @@ fun SettingsScreen(settingsStore: SettingsStore = koinInject()) {
             isSelected = { it == themeMode },
             onItemSelected = { themeMode = it },
             itemContent = { Text(it.name) },
+        )
+        item { Spacer(Modifier.height(16.dp)) }
+        switchSection(
+            title = { Res.string.settings_pureBlack.str },
+            checked = pureBlack,
+            onCheckedChange = { pureBlack = it },
         )
         item { Spacer(Modifier.height(16.dp)) }
         chipSection(
@@ -70,5 +77,26 @@ private fun <T> LazyListScope.chipSection(
             }
         }
     }
+}
 
+private fun LazyListScope.switchSection(
+    title: @Composable () -> String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    item {
+        Card(modifier = Modifier.fillMaxWidth(), onClick = { onCheckedChange(!checked) }) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(title())
+                Spacer(Modifier.weight(1f))
+                Switch(
+                    checked = checked,
+                    onCheckedChange = onCheckedChange,
+                )
+            }
+        }
+    }
 }
