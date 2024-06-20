@@ -7,6 +7,7 @@ import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -15,28 +16,28 @@ import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
 import androidx.navigation.compose.navigation
-import common.*
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
 
 @Composable
-fun AppNavHost(windowClass: WindowClass) {
+fun AppNavHost(windowClass: WindowSizeClass) {
+    val widthClass = windowClass.widthSizeClass
     val navController = rememberNavController()
     val stackEntry by navController.currentBackStackEntryAsState()
 
     CompositionLocalProvider(LocalNavController provides navController) {
         Scaffold(
             bottomBar = {
-                if (windowClass == WindowClass.Small) {
+                if (widthClass == WindowWidthSizeClass.Compact) {
                     BottomNavBar(navController, stackEntry)
                 }
             },
         ) { padding ->
             Row {
-                if (windowClass == WindowClass.Medium) {
+                if (widthClass == WindowWidthSizeClass.Medium) {
                     NavRail(navController, stackEntry)
                 }
-                if (windowClass == WindowClass.Large) {
+                if (widthClass == WindowWidthSizeClass.Expanded) {
                     NavDrawer(navController, stackEntry)
                 }
                 NavContent(navController, modifier = Modifier.padding(padding).clipToBounds())
