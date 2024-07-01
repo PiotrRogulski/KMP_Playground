@@ -11,16 +11,16 @@ import features.endpoints.*
 import org.koin.compose.*
 
 @Composable
-fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
-    val userController = remember { SingleQueryController { api.getUser(userID) } }
+fun ResourceByID(resourceID: Int, api: ExampleApi = koinInject()) {
+    val resourceController = remember { SingleQueryController { api.getResource(resourceID) } }
 
     val snackHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        userController.load()
+        resourceController.load()
     }
 
-    val state by userController.state
+    val state by resourceController.state
     val (data, loading, error) = state
 
     if (loading) {
@@ -39,13 +39,13 @@ fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
     }
 
     AppScaffold(
-        title = "User by ID ($userID)",
+        title = "Resource by ID ($resourceID)",
         snackbarHost = { SnackbarHost(snackHostState) },
     ) {
         data?.let {
             item {
                 Text(
-                    "${it.firstName} ${it.lastName}",
+                    "${it.name} from ${it.year}",
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(16.dp),
                 )

@@ -33,6 +33,21 @@ sealed class Route(val path: String) {
             fun screen(entry: NavBackStackEntry) =
                 UserByID(entry.arguments?.getInt("userID") ?: error("No userID provided"))
         }
+
+        data object Resources : Route("resources") {
+            @Composable
+            fun screen() = Resources()
+        }
+
+        data object ResourceByID : Route("resource_by_id/{resourceID}") {
+            fun createRoute(resourceID: Int) = "resource_by_id/$resourceID"
+
+            val arguments = listOf(arg<Int>("resourceID"))
+
+            @Composable
+            fun screen(entry: NavBackStackEntry) =
+                ResourceByID(entry.arguments?.getInt("resourceID") ?: error("No resourceID provided"))
+        }
     }
 
     data object Settings : Route("settings") {

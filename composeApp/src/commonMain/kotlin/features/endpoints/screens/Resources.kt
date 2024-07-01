@@ -8,10 +8,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
-import coil3.compose.*
 import common.widgets.*
 import features.endpoints.*
 import features.endpoints.models.*
@@ -21,17 +20,17 @@ import org.koin.compose.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Users(api: ExampleApi = koinInject()) {
+fun Resources(api: ExampleApi = koinInject()) {
     val scope = rememberCoroutineScope()
     val navController = LocalNavController.current
 
-    val usersController = remember { PaginatedQueryController(perPage = 5, callback = api::getUsers) }
+    val resourcesController = remember { PaginatedQueryController(perPage = 5, callback = api::getResources) }
 
     LaunchedEffect(Unit) {
-        usersController.loadNextPage()
+        resourcesController.loadNextPage()
     }
 
-    val state by usersController.state
+    val state by resourcesController.state
     val (data, page, total, totalPages, loading, error, hasMore) = state
 
     if (loading) {
@@ -40,11 +39,11 @@ fun Users(api: ExampleApi = koinInject()) {
         }
     }
 
-    AppScaffold(title = "Users") {
+    AppScaffold(title = "Resources") {
         stickyHeader {
             Surface(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total users)")
+                    Text("Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total resources)")
                     error?.let {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -56,18 +55,18 @@ fun Users(api: ExampleApi = koinInject()) {
                 }
             }
         }
-        itemsIndexed(data) { index, user ->
+        itemsIndexed(data) { index, resource ->
             Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
-                UserCard(
-                    user,
-                    onClick = { navController.navigate(Route.Endpoints.UserByID.createRoute(user.id)) },
+                ResourceCard(
+                    resource,
+                    onClick = { navController.navigate(Route.Endpoints.UserByID.createRoute(resource.id)) },
                 )
             }
         }
         if (hasMore) {
             item {
                 Button(
-                    onClick = { scope.launch { usersController.loadNextPage() } },
+                    onClick = { scope.launch { resourcesController.loadNextPage() } },
                     enabled = !loading,
                     modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                 ) {
@@ -79,8 +78,8 @@ fun Users(api: ExampleApi = koinInject()) {
 }
 
 @Composable
-private fun UserCard(
-    user: User,
+private fun ResourceCard(
+    resource: Resource,
     onClick: () -> Unit,
 ) {
     Card(
@@ -93,19 +92,25 @@ private fun UserCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AsyncImage(
-                modifier = Modifier.size(64.dp).clip(RoundedCornerShape(32.dp)),
-                model = user.avatar,
-                contentDescription = "User avatar",
-                contentScale = ContentScale.Crop,
-            )
+            val color = Color(resource.color.removePrefix("#").toLong(16) or 0xFF000000)
+            Box(Modifier.size(64.dp).clip(RoundedCornerShape(32.dp)).background(color)) {
+                Text(
+                    resource.id.toString(),
+                    modifier = Modifier.align(Alignment.Center),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = when (color.luminance()) {
+                        in 0.0..0.3 -> Color.White
+                        else -> Color.Black
+                    },
+                )
+            }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    "${user.firstName} ${user.lastName} (#${user.id})",
+                    "${resource.name} from ${resource.year}",
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Text(
-                    user.email,
+                    resource.pantoneValue,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

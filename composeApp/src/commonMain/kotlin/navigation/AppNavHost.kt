@@ -131,6 +131,8 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
             with(Route.Endpoints.List) { composable(path) { screen() } }
             with(Route.Endpoints.Users) { composable(path) { screen() } }
             with(Route.Endpoints.UserByID) { composable(path, arguments) { screen(it) } }
+            with(Route.Endpoints.Resources) { composable(path) { screen() } }
+            with(Route.Endpoints.ResourceByID) { composable(path, arguments) { screen(it) } }
         }
         with(Route.Settings) { composable(path) { screen() } }
     }

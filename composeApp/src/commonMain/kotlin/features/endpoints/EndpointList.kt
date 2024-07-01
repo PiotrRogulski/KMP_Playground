@@ -18,26 +18,18 @@ fun EndpointList() {
         }
         item { Spacer(Modifier.height(16.dp)) }
         item {
-            var userId by remember { mutableStateOf("") }
-
-            EndpointCard(
-                "User by ID",
-                trailing = {
-                    TextField(
-                        modifier = Modifier.width(150.dp),
-                        value = userId,
-                        onValueChange = { userId = it },
-                        placeholder = { Text("User ID") },
-                        singleLine = true,
-                    )
-                },
-            ) {
-                if (userId.isNotEmpty()) {
-                    val parsedId = userId.toIntOrNull()
-                    if (parsedId != null) {
-                        navController.navigate(Route.Endpoints.UserByID.createRoute(parsedId))
-                    }
-                }
+            EndpointCardWithId(cardLabel = "User by ID", fieldLabel = "User ID") { userId ->
+                navController.navigate(Route.Endpoints.UserByID.createRoute(userId))
+            }
+        }
+        item { Spacer(Modifier.height(16.dp)) }
+        item {
+            EndpointCard("Resources") { navController.navigate(Route.Endpoints.Resources.path) }
+        }
+        item { Spacer(Modifier.height(16.dp)) }
+        item {
+            EndpointCardWithId(cardLabel = "Resource by ID", fieldLabel = "Resource ID") { resourceId ->
+                navController.navigate(Route.Endpoints.ResourceByID.createRoute(resourceId))
             }
         }
     }
@@ -55,4 +47,23 @@ private fun EndpointCard(label: String, trailing: @Composable () -> Unit = {}, o
             trailing()
         }
     }
+}
+
+@Composable
+private fun EndpointCardWithId(cardLabel: String, fieldLabel: String, onClick: (Int) -> Unit) {
+    var id by remember { mutableStateOf("") }
+
+    EndpointCard(
+        cardLabel,
+        trailing = {
+            TextField(
+                modifier = Modifier.width(150.dp),
+                value = id,
+                onValueChange = { id = it },
+                placeholder = { Text(fieldLabel) },
+                singleLine = true,
+            )
+        },
+        onClick = { id.toIntOrNull()?.also(onClick) },
+    )
 }

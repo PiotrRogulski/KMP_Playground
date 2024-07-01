@@ -18,6 +18,9 @@ class ExampleApi(
 ) {
     suspend fun getUsers(page: Int = 1, perPage: Int = 4) = paginated<User>("users", page, perPage)
     suspend fun getUser(id: Int) = single<User>("users/$id")
+
+    suspend fun getResources(page: Int = 1, perPage: Int = 4) = paginated<Resource>("unknown", page, perPage)
+    suspend fun getResource(id: Int) = single<Resource>("unknown/$id")
 }
 
 private suspend inline fun <reified T> ExampleApi.single(query: String): SingleResponse<T> = client.get(query).body()

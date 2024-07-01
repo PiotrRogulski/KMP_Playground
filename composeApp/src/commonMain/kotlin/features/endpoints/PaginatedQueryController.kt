@@ -8,35 +8,25 @@ class PaginatedQueryController<T>(
     private val callback: suspend (page: Int, perPage: Int) -> PaginatedResponse<T>,
 ) {
     private val _data = mutableStateOf(emptyList<T>())
-    val data: State<List<T>> = _data
-
     private val _page = mutableStateOf<Int?>(null)
-    val page: State<Int?> = _page
-
     private val _total = mutableStateOf<Int?>(null)
-    val total: State<Int?> = _total
-
     private val _totalPages = mutableStateOf<Int?>(null)
-    val totalPages: State<Int?> = _totalPages
-
     private val _loading = mutableStateOf(false)
-    val loading: State<Boolean> = _loading
-
     private val _error = mutableStateOf<Throwable?>(null)
-    val error: State<Throwable?> = _error
 
-    val hasMore = derivedStateOf {
-        val page = _page.value
-        val totalPages = _totalPages.value
-        if (page == null || totalPages == null) {
-            true
-        } else {
-            page < totalPages
-        }
+    val state = derivedStateOf {
+        PaginatedQueryControllerState(
+            data = _data.value,
+            page = _page.value,
+            total = _total.value,
+            totalPages = _totalPages.value,
+            loading = _loading.value,
+            error = _error.value,
+        )
     }
 
     suspend fun loadNextPage() {
-        if (!hasMore.value || _loading.value) return
+        if (!state.value.hasMore || _loading.value) return
 
         _loading.value = true
         val pageToLoad = (_page.value ?: 0) + 1
@@ -54,4 +44,17 @@ class PaginatedQueryController<T>(
             _loading.value = false
         }
     }
+}
+
+data class PaginatedQueryControllerState<T>(
+    val data: List<T>,
+    val page: Int?,
+    val total: Int?,
+    val totalPages: Int?,
+    val loading: Boolean,
+    val error: Throwable?,
+) {
+    val hasMore = page == null || totalPages == null || page < totalPages
+
+    operator fun component7() = hasMore
 }
