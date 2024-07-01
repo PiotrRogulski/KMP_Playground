@@ -3,8 +3,7 @@ package navigation
 import androidx.compose.runtime.*
 import androidx.navigation.*
 import features.endpoints.*
-import features.endpoints.screens.user_by_id.*
-import features.endpoints.screens.users.*
+import features.endpoints.screens.*
 import features.home.*
 import features.settings.*
 
@@ -22,7 +21,7 @@ sealed class Route(val path: String) {
 
         data object Users : Route("users") {
             @Composable
-            fun screen() = UsersScreen()
+            fun screen() = Users()
         }
 
         data object UserByID : Route("user_by_id/{userID}") {
