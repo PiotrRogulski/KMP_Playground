@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
-import androidx.navigation.compose.navigation
+import navigation.routes.*
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
 
@@ -53,11 +53,7 @@ private fun BottomNavBar(navController: NavHostController, stackEntry: NavBackSt
             val selected = entry.isSelected(stackEntry)
             NavigationBarItem(
                 selected = selected,
-                onClick = {
-                    if (!selected) {
-                        navController.navigate(entry.route.path)
-                    }
-                },
+                onClick = { entry.navigate(navController, stackEntry) },
                 label = { Text(entry.label) },
                 icon = entry.icon,
             )
@@ -80,11 +76,7 @@ private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEn
                 val selected = entry.isSelected(stackEntry)
                 NavigationRailItem(
                     selected = selected,
-                    onClick = {
-                        if (!selected) {
-                            navController.navigate(entry.route.path)
-                        }
-                    },
+                    onClick = { entry.navigate(navController, stackEntry) },
                     label = { Text(entry.label) },
                     icon = entry.icon,
                 )
@@ -104,9 +96,7 @@ private fun NavDrawer(navController: NavHostController, stackEntry: NavBackStack
                 NavigationDrawerItem(
                     modifier = Modifier.padding(horizontal = 12.dp),
                     selected = entry.isSelected(stackEntry),
-                    onClick = {
-                        navController.navigate(entry.route.path)
-                    },
+                    onClick = { entry.navigate(navController, stackEntry) },
                     label = { Text(entry.label) },
                     icon = entry.icon,
                 )
@@ -120,45 +110,61 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
     NavHost(
         navController,
         modifier = modifier,
-        startDestination = Route.Home.path,
+        startDestination = Main,
         enterTransition = { slideIn { IntOffset(it.width / 2, 0) } + fadeIn() },
         exitTransition = { slideOut { IntOffset(-it.width / 2, 0) } + fadeOut() },
         popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
         popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
     ) {
-        with(Route.Home) { composable(path) { screen() } }
-        navigation(route = Route.Endpoints.path, startDestination = Route.Endpoints.List.path) {
-            with(Route.Endpoints.List) { composable(path) { screen() } }
-            with(Route.Endpoints.Users) { composable(path) { screen() } }
-            with(Route.Endpoints.UserByID) { composable(path, arguments) { screen(it) } }
-            with(Route.Endpoints.Resources) { composable(path) { screen() } }
-            with(Route.Endpoints.ResourceByID) { composable(path, arguments) { screen(it) } }
+        (Main navIn this) {
+            Home routeIn this
+            (Endpoints navIn this) {
+                Endpoints.List routeIn this
+                (Endpoints.Users navIn this) {
+                    Endpoints.Users.List routeIn this
+                    Endpoints.Users.UserByID routeIn this
+                }
+                (Endpoints.Resources navIn this) {
+                    Endpoints.Resources.List routeIn this
+                    Endpoints.Resources.ResourceByID routeIn this
+                }
+            }
+            Settings routeIn this
         }
-        with(Route.Settings) { composable(path) { screen() } }
     }
 }
 
 private enum class NavEntry(
-    val route: Route,
+    val route: Any,
     val label: String,
     val icon: @Composable () -> Unit,
 ) {
-    Home(
-        Route.Home,
+    NavHome(
+        Home,
         "Home",
-        { Icon(imageVector = Icons.Rounded.Home, contentDescription = null) },
+        { Icon(Icons.Rounded.Home, contentDescription = null) },
     ),
-    Endpoints(
-        Route.Endpoints,
+    NavEndpoints(
+        Endpoints,
         "Endpoints",
-        { Icon(imageVector = Icons.AutoMirrored.Rounded.List, contentDescription = null) },
+        { Icon(Icons.AutoMirrored.Rounded.List, contentDescription = null) },
     ),
-    Settings(
-        Route.Settings,
+    NavSettings(
+        Settings,
         "Settings",
-        { Icon(imageVector = Icons.Rounded.Settings, contentDescription = null) },
+        { Icon(Icons.Rounded.Settings, contentDescription = null) },
     );
 
     fun isSelected(stackEntry: NavBackStackEntry?) =
-        stackEntry?.destination?.hierarchy?.any { it.route == route.path } == true
+        stackEntry?.destination?.hierarchy.orEmpty().let { hierarchy ->
+            hierarchy.elementAtOrNull(hierarchy.count() - 3)?.route?.removePrefix("navigation.routes.") == route.toString()
+        }
+
+    fun navigate(navController: NavController, stackEntry: NavBackStackEntry?) {
+        if (!isSelected(stackEntry)) {
+            navController.navigate(route) {
+                popUpTo(Main)
+            }
+        }
+    }
 }

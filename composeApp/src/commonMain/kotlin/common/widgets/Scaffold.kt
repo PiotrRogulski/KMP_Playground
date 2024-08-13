@@ -18,7 +18,7 @@ fun AppScaffold(
     content: LazyListScope.() -> Unit,
 ) {
     val navController = LocalNavController.current
-    val canPop by remember { derivedStateOf { navController.previousBackStackEntry != null } }
+    val canPop = navController.previousBackStackEntry != null
 
     Scaffold(
         snackbarHost = snackbarHost,
@@ -27,7 +27,7 @@ fun AppScaffold(
                 title = { Text(title) },
                 navigationIcon = {
                     if (canPop) {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(onClick = { navController.navigateUp() }) {
                             Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
                         }
                     }

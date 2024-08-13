@@ -17,6 +17,7 @@ import features.endpoints.*
 import features.endpoints.models.*
 import kotlinx.coroutines.*
 import navigation.*
+import navigation.routes.*
 import org.koin.compose.*
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -60,7 +61,7 @@ fun Users(api: ExampleApi = koinInject()) {
             Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
                 UserCard(
                     user,
-                    onClick = { navController.navigate(Route.Endpoints.UserByID.createRoute(user.id)) },
+                    onClick = { navController.navigate(Endpoints.Users.UserByID(user.id)) },
                 )
             }
         }

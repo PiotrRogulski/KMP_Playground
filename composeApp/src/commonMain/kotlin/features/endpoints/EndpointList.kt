@@ -7,6 +7,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 import common.widgets.*
 import navigation.*
+import navigation.routes.*
 
 @Composable
 fun EndpointList() {
@@ -14,22 +15,22 @@ fun EndpointList() {
 
     AppScaffold(title = "Endpoints") {
         item {
-            EndpointCard("Users") { navController.navigate(Route.Endpoints.Users.path) }
+            EndpointCard("Users") { navController.navigate(Endpoints.Users) }
         }
         item { Spacer(Modifier.height(16.dp)) }
         item {
             EndpointCardWithId(cardLabel = "User by ID", fieldLabel = "User ID") { userId ->
-                navController.navigate(Route.Endpoints.UserByID.createRoute(userId))
+                navController.navigate(Endpoints.Users.UserByID(userId))
             }
         }
         item { Spacer(Modifier.height(16.dp)) }
         item {
-            EndpointCard("Resources") { navController.navigate(Route.Endpoints.Resources.path) }
+            EndpointCard("Resources") { navController.navigate(Endpoints.Resources) }
         }
         item { Spacer(Modifier.height(16.dp)) }
         item {
             EndpointCardWithId(cardLabel = "Resource by ID", fieldLabel = "Resource ID") { resourceId ->
-                navController.navigate(Route.Endpoints.ResourceByID.createRoute(resourceId))
+                navController.navigate(Endpoints.Resources.ResourceByID(resourceId))
             }
         }
     }
