@@ -17,58 +17,57 @@ import org.jetbrains.skia.*
 @Composable
 fun HomeScreen() {
     AppScaffold(title = "Home") {
+        item { Text("Home Screen") }
         item {
-            Text("Home Screen")
-        }
-        item {
-            Box(Modifier.padding(64.dp).size(300.dp).composed {
-                val time by produceState(0f) {
-                    while (true) {
-                        withInfiniteAnimationFrameMillis {
-                            value = it / 1000f
+            Box(
+                Modifier.padding(64.dp).size(300.dp).composed {
+                    val time by
+                        produceState(0f) {
+                            while (true) {
+                                withInfiniteAnimationFrameMillis { value = it / 1000f }
+                            }
+                        }
+                    val effect = remember { RuntimeEffect.makeForShader(compositeSksl) }
+                    val compositeShaderBuilder = remember(effect) { RuntimeShaderBuilder(effect) }
+                    Modifier.drawWithCache {
+                        compositeShaderBuilder.uniform(
+                            name = "iResolution",
+                            value1 = size.width,
+                            value2 = size.height,
+                        )
+                        compositeShaderBuilder.uniform("iTime", time)
+                        val shaderBrush = ShaderBrush(compositeShaderBuilder.makeShader())
+                        onDrawBehind {
+                            withTransform({ scale(scaleX = 1f, scaleY = -1f) }) {
+                                drawRect(shaderBrush)
+                            }
                         }
                     }
-                }
-                val effect = remember { RuntimeEffect.makeForShader(compositeSksl) }
-                val compositeShaderBuilder = remember(effect) { RuntimeShaderBuilder(effect) }
-                Modifier.drawWithCache {
-                    compositeShaderBuilder.uniform(
-                        name = "iResolution",
-                        value1 = size.width,
-                        value2 = size.height
-                    )
-                    compositeShaderBuilder.uniform(
-                        "iTime",
-                        time
-                    )
-                    val shaderBrush = ShaderBrush(compositeShaderBuilder.makeShader())
-                    onDrawBehind {
-                        withTransform({ scale(scaleX = 1f, scaleY = -1f) }) {
-                            drawRect(shaderBrush)
-                        }
-                    }
-                }
-            })
+                })
         }
         item {
-            val angleX by rememberInfiniteTransition().animateFloat(
-                initialValue = 0f,
-                targetValue = 360f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(4000, easing = LinearEasing),
-                ),
-            )
-            val angleY by rememberInfiniteTransition().animateFloat(
-                initialValue = 0f,
-                targetValue = 360f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(5300, easing = LinearEasing),
-                ),
-            )
-            Box(Modifier.padding(64.dp).size(250.dp).graphicsLayer {
-                rotationX = angleX
-                rotationY = angleY
-            }) {
+            val angleX by
+                rememberInfiniteTransition()
+                    .animateFloat(
+                        initialValue = 0f,
+                        targetValue = 360f,
+                        animationSpec =
+                            infiniteRepeatable(animation = tween(4000, easing = LinearEasing)),
+                    )
+            val angleY by
+                rememberInfiniteTransition()
+                    .animateFloat(
+                        initialValue = 0f,
+                        targetValue = 360f,
+                        animationSpec =
+                            infiniteRepeatable(animation = tween(5300, easing = LinearEasing)),
+                    )
+            Box(
+                Modifier.padding(64.dp).size(250.dp).graphicsLayer {
+                    rotationX = angleX
+                    rotationY = angleY
+                },
+            ) {
                 Box(Modifier.background(Color.Green).fillMaxSize())
                 Text(
                     "Box with graphicsLayer",
@@ -82,7 +81,8 @@ fun HomeScreen() {
 
 // https://github.com/gleb-skobinsky/shaders-demo/blob/main/shared/src/commonMain/kotlin/sksl.kt
 // language=glsl
-const val compositeSksl = """
+const val compositeSksl =
+    """
     uniform float2 iResolution;      // Viewport resolution (pixels)
     uniform float  iTime;            // Shader playback time (s)
     
@@ -106,14 +106,14 @@ const val compositeSksl = """
     float noise( in vec2 p ) {
         const float K1 = 0.366025404; // (sqrt(3)-1)/2;
         const float K2 = 0.211324865; // (3-sqrt(3))/6;
-        vec2 i = floor(p + (p.x+p.y)*K1);	
+        vec2 i = floor(p + (p.x+p.y)*K1);
         vec2 a = p - i + (i.x+i.y)*K2;
         vec2 o = (a.x>a.y) ? vec2(1.0,0.0) : vec2(0.0,1.0); //vec2 of = 0.5 + 0.5*vec2(sign(a.x-a.y), sign(a.y-a.x));
         vec2 b = a - o + K2;
         vec2 c = a - 1.0 + 2.0*K2;
         vec3 h = max(0.5-vec3(dot(a,a), dot(b,b), dot(c,c) ), 0.0 );
         vec3 n = h*h*h*h*vec3( dot(a,hash(i+0.0)), dot(b,hash(i+o)), dot(c,hash(i+1.0)));
-        return dot(n, vec3(70.0));	
+        return dot(n, vec3(70.0));
     }
 
     float fbm(vec2 n) {

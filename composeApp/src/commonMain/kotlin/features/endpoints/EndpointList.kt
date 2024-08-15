@@ -14,30 +14,30 @@ fun EndpointList() {
     val navController = LocalNavController.current
 
     AppScaffold(title = "Endpoints") {
-        item {
-            EndpointCard("Users") { navController.navigate(Endpoints.Users) }
-        }
+        item { EndpointCard("Users") { navController.navigate(Endpoints.Users) } }
         item { Spacer(Modifier.height(16.dp)) }
         item {
-            EndpointCardWithId(cardLabel = "User by ID", fieldLabel = "User ID") { userId ->
-                navController.navigate(Endpoints.Users.UserByID(userId))
+            EndpointCardWithId(cardLabel = "User by ID", fieldLabel = "User ID") {
+                navController.navigate(Endpoints.Users.UserByID(it))
             }
         }
         item { Spacer(Modifier.height(16.dp)) }
-        item {
-            EndpointCard("Resources") { navController.navigate(Endpoints.Resources) }
-        }
+        item { EndpointCard("Resources") { navController.navigate(Endpoints.Resources) } }
         item { Spacer(Modifier.height(16.dp)) }
         item {
-            EndpointCardWithId(cardLabel = "Resource by ID", fieldLabel = "Resource ID") { resourceId ->
-                navController.navigate(Endpoints.Resources.ResourceByID(resourceId))
+            EndpointCardWithId(cardLabel = "Resource by ID", fieldLabel = "Resource ID") {
+                navController.navigate(Endpoints.Resources.ResourceByID(it))
             }
         }
     }
 }
 
 @Composable
-private fun EndpointCard(label: String, trailing: @Composable () -> Unit = {}, onClick: () -> Unit) {
+private fun EndpointCard(
+    label: String,
+    trailing: @Composable () -> Unit = {},
+    onClick: () -> Unit
+) {
     Card(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),

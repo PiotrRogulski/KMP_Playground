@@ -5,11 +5,10 @@ import kotlinx.serialization.*
 @Serializable
 data class PaginatedResponse<T>(
     val page: Int,
-    @SerialName("per_page") val perPage: Int,
+    val perPage: Int,
     val total: Int,
-    @SerialName("total_pages") val totalPages: Int,
+    val totalPages: Int,
     val data: List<T>,
 )
 
-@Serializable
-data class SingleResponse<T>(val data: T)
+@Serializable data class SingleResponse<T>(val data: T)

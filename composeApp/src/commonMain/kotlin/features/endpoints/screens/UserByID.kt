@@ -16,17 +16,13 @@ fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
 
     val snackHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        userController.load()
-    }
+    LaunchedEffect(Unit) { userController.load() }
 
     val state by userController.state
     val (data, loading, error) = state
 
     if (loading) {
-        Dialog(onDismissRequest = { }) {
-            CircularProgressIndicator()
-        }
+        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
     }
 
     LaunchedEffect(error) {

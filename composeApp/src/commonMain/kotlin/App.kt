@@ -11,12 +11,6 @@ import org.koin.compose.*
 @Preview
 fun App(windowSizeClass: WindowSizeClass = calculateWindowSizeClass()) {
     CompositionLocalProvider(LocalWindowSizeClass provides windowSizeClass) {
-        KoinApplication({
-            modules(appModule())
-        }) {
-            AppTheme {
-                AppNavHost(windowSizeClass)
-            }
-        }
+        KoinApplication({ modules(appModule()) }) { AppTheme { AppNavHost(windowSizeClass) } }
     }
 }

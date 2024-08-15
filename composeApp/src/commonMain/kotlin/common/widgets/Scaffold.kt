@@ -38,6 +38,8 @@ fun AppScaffold(
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
-        ) { content() }
+        ) {
+            content()
+        }
     }
 }

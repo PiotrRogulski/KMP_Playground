@@ -25,42 +25,45 @@ fun Resources(api: ExampleApi = koinInject()) {
     val scope = rememberCoroutineScope()
     val navController = LocalNavController.current
 
-    val resourcesController = remember { PaginatedQueryController(perPage = 5, callback = api::getResources) }
-
-    LaunchedEffect(Unit) {
-        resourcesController.loadNextPage()
+    val resourcesController = remember {
+        PaginatedQueryController(perPage = 5, callback = api::getResources)
     }
+
+    LaunchedEffect(Unit) { resourcesController.loadNextPage() }
 
     val state by resourcesController.state
     val (data, page, total, totalPages, loading, error, hasMore) = state
 
     if (loading) {
-        Dialog(onDismissRequest = { }) {
-            CircularProgressIndicator()
-        }
+        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
     }
 
     AppScaffold(title = "Resources") {
         stickyHeader {
-            Surface(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total resources)")
-                    error?.let {
-                        Spacer(modifier = Modifier.height(8.dp))
+            Surface(
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            "An error occurred: $it",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
+                            "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total resources)",
                         )
+                        error?.let {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                "An error occurred: $it",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                        }
                     }
                 }
-            }
         }
         itemsIndexed(data) { index, resource ->
             Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
                 ResourceCard(
                     resource,
-                    onClick = { navController.navigate(Endpoints.Resources.ResourceByID(resource.id)) },
+                    onClick = {
+                        navController.navigate(Endpoints.Resources.ResourceByID(resource.id))
+                    },
                 )
             }
         }
@@ -99,10 +102,11 @@ private fun ResourceCard(
                     resource.id.toString(),
                     modifier = Modifier.align(Alignment.Center),
                     style = MaterialTheme.typography.titleLarge,
-                    color = when (color.luminance()) {
-                        in 0.0..0.3 -> Color.White
-                        else -> Color.Black
-                    },
+                    color =
+                        when (color.luminance()) {
+                            in 0.0..0.3 -> Color.White
+                            else -> Color.Black
+                        },
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

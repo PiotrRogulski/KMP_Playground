@@ -26,26 +26,28 @@ fun Users(api: ExampleApi = koinInject()) {
     val scope = rememberCoroutineScope()
     val navController = LocalNavController.current
 
-    val usersController = remember { PaginatedQueryController(perPage = 5, callback = api::getUsers) }
-
-    LaunchedEffect(Unit) {
-        usersController.loadNextPage()
+    val usersController = remember {
+        PaginatedQueryController(perPage = 5, callback = api::getUsers)
     }
+
+    LaunchedEffect(Unit) { usersController.loadNextPage() }
 
     val state by usersController.state
     val (data, page, total, totalPages, loading, error, hasMore) = state
 
     if (loading) {
-        Dialog(onDismissRequest = { }) {
-            CircularProgressIndicator()
-        }
+        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
     }
 
     AppScaffold(title = "Users") {
         stickyHeader {
-            Surface(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
+            Surface(
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+            ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total users)")
+                    Text(
+                        "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total users)",
+                    )
                     error?.let {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(

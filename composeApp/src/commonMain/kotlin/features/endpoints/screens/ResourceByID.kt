@@ -16,17 +16,13 @@ fun ResourceByID(resourceID: Int, api: ExampleApi = koinInject()) {
 
     val snackHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        resourceController.load()
-    }
+    LaunchedEffect(Unit) { resourceController.load() }
 
     val state by resourceController.state
     val (data, loading, error) = state
 
     if (loading) {
-        Dialog(onDismissRequest = { }) {
-            CircularProgressIndicator()
-        }
+        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
     }
 
     LaunchedEffect(error) {

@@ -15,6 +15,10 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
+import features.endpoints.*
+import features.endpoints.screens.*
+import features.home.*
+import features.settings.*
 import navigation.routes.*
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
@@ -116,20 +120,24 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
         popEnterTransition = { slideIn { IntOffset(-it.width / 2, 0) } + fadeIn() },
         popExitTransition = { slideOut { IntOffset(it.width / 2, 0) } + fadeOut() },
     ) {
-        (Main navIn this) {
-            Home routeIn this
-            (Endpoints navIn this) {
-                Endpoints.List routeIn this
-                (Endpoints.Users navIn this) {
-                    Endpoints.Users.List routeIn this
-                    Endpoints.Users.UserByID routeIn this
+        navigation<Main>(startDestination = Home) {
+            composable<Home> { HomeScreen() }
+            navigation<Endpoints>(startDestination = Endpoints.List) {
+                composable<Endpoints.List> { EndpointList() }
+                navigation<Endpoints.Users>(startDestination = Endpoints.Users.List) {
+                    composable<Endpoints.Users.List> { Users() }
+                    composable<Endpoints.Users.UserByID> {
+                        UserByID(it.toRoute<Endpoints.Users.UserByID>().userID)
+                    }
                 }
-                (Endpoints.Resources navIn this) {
-                    Endpoints.Resources.List routeIn this
-                    Endpoints.Resources.ResourceByID routeIn this
+                navigation<Endpoints.Resources>(startDestination = Endpoints.Resources.List) {
+                    composable<Endpoints.Resources.List> { Resources() }
+                    composable<Endpoints.Resources.ResourceByID> {
+                        ResourceByID(it.toRoute<Endpoints.Resources.ResourceByID>().resourceID)
+                    }
                 }
             }
-            Settings routeIn this
+            composable<Settings> { SettingsScreen() }
         }
     }
 }
@@ -157,14 +165,15 @@ private enum class NavEntry(
 
     fun isSelected(stackEntry: NavBackStackEntry?) =
         stackEntry?.destination?.hierarchy.orEmpty().let { hierarchy ->
-            hierarchy.elementAtOrNull(hierarchy.count() - 3)?.route?.removePrefix("navigation.routes.") == route.toString()
+            hierarchy
+                .elementAtOrNull(hierarchy.count() - 3)
+                ?.route
+                ?.removePrefix("navigation.routes.") == route.toString()
         }
 
     fun navigate(navController: NavController, stackEntry: NavBackStackEntry?) {
         if (!isSelected(stackEntry)) {
-            navController.navigate(route) {
-                popUpTo(Main)
-            }
+            navController.navigate(route) { popUpTo(Main) }
         }
     }
 }
