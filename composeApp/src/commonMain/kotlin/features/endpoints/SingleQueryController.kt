@@ -10,13 +10,9 @@ class SingleQueryController<T : Any>(
     private val _loading = mutableStateOf(false)
     private val _error = mutableStateOf<Throwable?>(null)
 
-    val state = derivedStateOf {
-        SingleQueryControllerState(
-            data = _data.value,
-            loading = _loading.value,
-            error = _error.value,
-        )
-    }
+    val data: State<T?> = _data
+    val loading: State<Boolean> = _loading
+    val error: State<Throwable?> = _error
 
     suspend fun load() {
         if (_loading.value) return
@@ -24,19 +20,12 @@ class SingleQueryController<T : Any>(
         _loading.value = true
 
         try {
-            val data = callback()
-            _data.value = data.data
+            val response = callback()
+            _data.value = response.data
         } catch (e: Throwable) {
             _error.value = e
-            return
         } finally {
             _loading.value = false
         }
     }
 }
-
-data class SingleQueryControllerState<T>(
-    val data: T?,
-    val loading: Boolean,
-    val error: Throwable?,
-)

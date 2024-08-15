@@ -10,7 +10,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.window.*
 import common.widgets.*
 import features.endpoints.*
 import features.endpoints.models.*
@@ -31,8 +30,13 @@ fun Resources(api: ExampleApi = koinInject()) {
 
     LaunchedEffect(Unit) { resourcesController.loadNextPage() }
 
-    val state by resourcesController.state
-    val (data, page, total, totalPages, loading, error, hasMore) = state
+    val data by resourcesController.data
+    val page by resourcesController.page
+    val total by resourcesController.total
+    val totalPages by resourcesController.totalPages
+    val loading by resourcesController.loading
+    val error by resourcesController.error
+    val hasMore by resourcesController.hasMore
 
     LoadingOverlay(loading)
 

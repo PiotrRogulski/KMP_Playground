@@ -18,8 +18,9 @@ fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
 
     LaunchedEffect(Unit) { userController.load() }
 
-    val state by userController.state
-    val (data, loading, error) = state
+    val data by userController.data
+    val loading by userController.loading
+    val error by userController.error
 
     LoadingOverlay(loading)
 

@@ -14,19 +14,18 @@ class PaginatedQueryController<T>(
     private val _loading = mutableStateOf(false)
     private val _error = mutableStateOf<Throwable?>(null)
 
-    val state = derivedStateOf {
-        PaginatedQueryControllerState(
-            data = _data.value,
-            page = _page.value,
-            total = _total.value,
-            totalPages = _totalPages.value,
-            loading = _loading.value,
-            error = _error.value,
-        )
+    val data: State<List<T>> = _data
+    val page: State<Int?> = _page
+    val total: State<Int?> = _total
+    val totalPages: State<Int?> = _totalPages
+    val loading: State<Boolean> = _loading
+    val error: State<Throwable?> = _error
+    val hasMore: State<Boolean> = derivedStateOf {
+        _page.value?.let { page -> _totalPages.value?.let { total -> page < total } } ?: false
     }
 
     suspend fun loadNextPage() {
-        if (!state.value.hasMore || _loading.value) return
+        if (!hasMore.value || _loading.value) return
 
         _loading.value = true
         val pageToLoad = (_page.value ?: 0) + 1
@@ -44,17 +43,4 @@ class PaginatedQueryController<T>(
             _loading.value = false
         }
     }
-}
-
-data class PaginatedQueryControllerState<T>(
-    val data: List<T>,
-    val page: Int?,
-    val total: Int?,
-    val totalPages: Int?,
-    val loading: Boolean,
-    val error: Throwable?,
-) {
-    val hasMore = page == null || totalPages == null || page < totalPages
-
-    operator fun component7() = hasMore
 }

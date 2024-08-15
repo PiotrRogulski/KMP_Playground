@@ -18,8 +18,9 @@ fun ResourceByID(resourceID: Int, api: ExampleApi = koinInject()) {
 
     LaunchedEffect(Unit) { resourceController.load() }
 
-    val state by resourceController.state
-    val (data, loading, error) = state
+    val data by resourceController.data
+    val loading by resourceController.loading
+    val error by resourceController.error
 
     LoadingOverlay(loading)
 

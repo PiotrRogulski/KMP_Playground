@@ -32,8 +32,13 @@ fun Users(api: ExampleApi = koinInject()) {
 
     LaunchedEffect(Unit) { usersController.loadNextPage() }
 
-    val state by usersController.state
-    val (data, page, total, totalPages, loading, error, hasMore) = state
+    val data by usersController.data
+    val page by usersController.page
+    val total by usersController.total
+    val totalPages by usersController.totalPages
+    val loading by usersController.loading
+    val error by usersController.error
+    val hasMore by usersController.hasMore
 
     LoadingOverlay(loading)
 
