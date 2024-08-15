@@ -36,7 +36,7 @@ fun EndpointList() {
 private fun EndpointCard(
     label: String,
     trailing: @Composable () -> Unit = {},
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth(), onClick = onClick) {
         Row(

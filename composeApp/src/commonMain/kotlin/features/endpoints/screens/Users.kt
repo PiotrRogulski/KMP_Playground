@@ -35,9 +35,7 @@ fun Users(api: ExampleApi = koinInject()) {
     val state by usersController.state
     val (data, page, total, totalPages, loading, error, hasMore) = state
 
-    if (loading) {
-        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
-    }
+    LoadingOverlay(loading)
 
     AppScaffold(title = "Users") {
         stickyHeader {

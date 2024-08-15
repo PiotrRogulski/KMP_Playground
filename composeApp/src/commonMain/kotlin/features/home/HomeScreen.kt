@@ -43,7 +43,8 @@ fun HomeScreen() {
                             }
                         }
                     }
-                })
+                },
+            )
         }
         item {
             val angleX by

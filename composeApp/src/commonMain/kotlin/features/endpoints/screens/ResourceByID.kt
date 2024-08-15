@@ -21,9 +21,7 @@ fun ResourceByID(resourceID: Int, api: ExampleApi = koinInject()) {
     val state by resourceController.state
     val (data, loading, error) = state
 
-    if (loading) {
-        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
-    }
+    LoadingOverlay(loading)
 
     LaunchedEffect(error) {
         if (error != null) {

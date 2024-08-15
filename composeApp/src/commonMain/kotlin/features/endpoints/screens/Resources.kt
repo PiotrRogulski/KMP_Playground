@@ -34,9 +34,7 @@ fun Resources(api: ExampleApi = koinInject()) {
     val state by resourcesController.state
     val (data, page, total, totalPages, loading, error, hasMore) = state
 
-    if (loading) {
-        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
-    }
+    LoadingOverlay(loading)
 
     AppScaffold(title = "Resources") {
         stickyHeader {

@@ -21,9 +21,7 @@ fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
     val state by userController.state
     val (data, loading, error) = state
 
-    if (loading) {
-        Dialog(onDismissRequest = {}) { CircularProgressIndicator() }
-    }
+    LoadingOverlay(loading)
 
     LaunchedEffect(error) {
         if (error != null) {
