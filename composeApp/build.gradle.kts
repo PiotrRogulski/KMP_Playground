@@ -2,8 +2,8 @@ import org.jetbrains.compose.desktop.application.dsl.*
 import org.jetbrains.kotlin.gradle.*
 import org.jetbrains.kotlin.gradle.dsl.*
 
-//import org.jetbrains.kotlin.gradle.targets.js.dsl.*
-//import org.jetbrains.kotlin.gradle.targets.js.webpack.*
+// import org.jetbrains.kotlin.gradle.targets.js.dsl.*
+// import org.jetbrains.kotlin.gradle.targets.js.webpack.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -15,32 +15,29 @@ plugins {
 }
 
 kotlin {
-//    @OptIn(ExperimentalWasmDsl::class) wasmJs {
-//        moduleName = "composeApp"
-//        browser {
-//            commonWebpackConfig {
-//                outputFileName = "composeApp.js"
-//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-//                    static = (static ?: mutableListOf()).apply { // Serve sources to debug inside browser
-//                        add(project.projectDir.path)
-//                    }
-//                }
-//            }
-//        }
-//        binaries.executable()
-//    }
+    // @OptIn(ExperimentalWasmDsl::class) wasmJs {
+    //     moduleName = "composeApp"
+    //     browser {
+    //         commonWebpackConfig {
+    //             outputFileName = "composeApp.js"
+    //             devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+    //                 static = (static ?: mutableListOf()).apply {
+    //                     add(project.projectDir.path)
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     binaries.executable()
+    // }
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class) compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
     }
 
     jvm("desktop")
 
-    listOf(
-        iosX64(), iosArm64(), iosSimulatorArm64()
-    ).forEach { iosTarget ->
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
@@ -76,6 +73,7 @@ kotlin {
             implementation(libs.coil.mp)
             implementation(libs.coil.network.ktor)
             implementation(libs.window.size)
+            implementation(libs.logback.classic)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -99,26 +97,14 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+    buildTypes { getByName("release") { isMinifyEnabled = false } }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures {
-        compose = true
-    }
-    dependencies {
-        debugImplementation(compose.uiTooling)
-    }
+    buildFeatures { compose = true }
+    dependencies { debugImplementation(compose.uiTooling) }
 }
 
 compose.desktop {
@@ -133,6 +119,4 @@ compose.desktop {
     }
 }
 
-compose.resources {
-    generateResClass = always
-}
+compose.resources { generateResClass = always }
