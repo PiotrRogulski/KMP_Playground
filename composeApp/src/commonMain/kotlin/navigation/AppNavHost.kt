@@ -11,6 +11,7 @@ import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.vector.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -59,7 +60,7 @@ private fun BottomNavBar(navController: NavHostController, stackEntry: NavBackSt
                 selected = selected,
                 onClick = { entry.navigate(navController, stackEntry) },
                 label = { Text(entry.label) },
-                icon = entry.icon,
+                icon = { entry.icon() },
             )
         }
     }
@@ -82,7 +83,7 @@ private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEn
                     selected = selected,
                     onClick = { entry.navigate(navController, stackEntry) },
                     label = { Text(entry.label) },
-                    icon = entry.icon,
+                    icon = { entry.icon() },
                 )
             }
         }
@@ -102,7 +103,7 @@ private fun NavDrawer(navController: NavHostController, stackEntry: NavBackStack
                     selected = entry.isSelected(stackEntry),
                     onClick = { entry.navigate(navController, stackEntry) },
                     label = { Text(entry.label) },
-                    icon = entry.icon,
+                    icon = { entry.icon() },
                 )
             }
         }
@@ -145,22 +146,22 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
 private enum class NavEntry(
     val route: Any,
     val label: String,
-    val icon: @Composable () -> Unit,
+    val iconData: ImageVector,
 ) {
     NavHome(
         Home,
         "Home",
-        { Icon(Icons.Rounded.Home, contentDescription = null) },
+        Icons.Rounded.Home,
     ),
     NavEndpoints(
         Endpoints,
         "Endpoints",
-        { Icon(Icons.AutoMirrored.Rounded.List, contentDescription = null) },
+        Icons.AutoMirrored.Rounded.List,
     ),
     NavSettings(
         Settings,
         "Settings",
-        { Icon(Icons.Rounded.Settings, contentDescription = null) },
+        Icons.Rounded.Settings,
     );
 
     fun isSelected(stackEntry: NavBackStackEntry?) =
@@ -176,4 +177,6 @@ private enum class NavEntry(
             navController.navigate(route) { popUpTo(Main) }
         }
     }
+
+    @Composable fun icon() = Icon(iconData, contentDescription = label)
 }
