@@ -7,7 +7,6 @@ import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.*
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.*
+import androidx.window.core.layout.*
 import features.endpoints.*
 import features.endpoints.screens.*
 import features.home.*
@@ -26,23 +26,23 @@ val LocalNavController = compositionLocalOf<NavController> { error("No NavContro
 
 @Composable
 fun AppNavHost(windowClass: WindowSizeClass) {
-    val widthClass = windowClass.widthSizeClass
+    val widthClass = windowClass.windowWidthSizeClass
     val navController = rememberNavController()
     val stackEntry by navController.currentBackStackEntryAsState()
 
     CompositionLocalProvider(LocalNavController provides navController) {
         Scaffold(
             bottomBar = {
-                if (widthClass == WindowWidthSizeClass.Compact) {
+                if (widthClass == WindowWidthSizeClass.COMPACT) {
                     BottomNavBar(navController, stackEntry)
                 }
             },
         ) { padding ->
             Row {
-                if (widthClass == WindowWidthSizeClass.Medium) {
+                if (widthClass == WindowWidthSizeClass.MEDIUM) {
                     NavRail(navController, stackEntry)
                 }
-                if (widthClass == WindowWidthSizeClass.Expanded) {
+                if (widthClass == WindowWidthSizeClass.EXPANDED) {
                     NavDrawer(navController, stackEntry)
                 }
                 NavContent(navController, modifier = Modifier.padding(padding).clipToBounds())
@@ -178,5 +178,6 @@ private enum class NavEntry(
         }
     }
 
-    @Composable fun icon() = Icon(iconData, contentDescription = label)
+    @Composable
+    fun icon() = Icon(iconData, contentDescription = label)
 }

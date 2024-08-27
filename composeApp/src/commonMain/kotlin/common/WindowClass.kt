@@ -1,7 +1,7 @@
 package common
 
-import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
+import androidx.window.core.layout.*
 
 val LocalWindowSizeClass =
     compositionLocalOf<WindowSizeClass> { error("No WindowSizeClass provided") }
