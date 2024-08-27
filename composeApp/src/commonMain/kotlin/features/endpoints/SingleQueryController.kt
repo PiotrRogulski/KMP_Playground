@@ -3,9 +3,7 @@ package features.endpoints
 import androidx.compose.runtime.*
 import features.endpoints.models.*
 
-class SingleQueryController<T : Any>(
-    private val callback: suspend () -> SingleResponse<T>,
-) {
+class SingleQueryController<T : Any>(private val callback: suspend () -> SingleResponse<T>) {
     private val _data = mutableStateOf<T?>(null)
     private val _loading = mutableStateOf(false)
     private val _error = mutableStateOf<Throwable?>(null)

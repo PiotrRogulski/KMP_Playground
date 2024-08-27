@@ -21,10 +21,10 @@ class ExampleApi(
                     Json {
                         ignoreUnknownKeys = true
                         namingStrategy = JsonNamingStrategy.SnakeCase
-                    },
+                    }
                 )
             }
-        },
+        }
 ) {
     suspend fun getUsers(page: Int = 1, perPage: Int = 4) = paginated<User>("users", page, perPage)
 

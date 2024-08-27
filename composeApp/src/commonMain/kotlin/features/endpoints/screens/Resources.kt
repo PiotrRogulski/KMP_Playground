@@ -43,21 +43,22 @@ fun Resources(api: ExampleApi = koinInject()) {
     AppScaffold(title = "Resources") {
         stickyHeader {
             Surface(
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total resources)"
+                    )
+                    error?.let {
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total resources)",
+                            "An error occurred: $it",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
                         )
-                        error?.let {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                "An error occurred: $it",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error,
-                            )
-                        }
                     }
                 }
+            }
         }
         itemsIndexed(data) { index, resource ->
             Box(modifier = Modifier.padding(top = if (index == 0) 0.dp else 16.dp)) {
@@ -84,10 +85,7 @@ fun Resources(api: ExampleApi = koinInject()) {
 }
 
 @Composable
-private fun ResourceCard(
-    resource: Resource,
-    onClick: () -> Unit,
-) {
+private fun ResourceCard(resource: Resource, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = { onClick() },
@@ -116,10 +114,7 @@ private fun ResourceCard(
                     "${resource.name} from ${resource.year}",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                Text(
-                    resource.pantoneValue,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Text(resource.pantoneValue, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

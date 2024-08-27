@@ -92,10 +92,7 @@ private fun LazyListScope.switchSection(
             ) {
                 Text(title())
                 Spacer(Modifier.weight(1f))
-                Switch(
-                    checked = checked,
-                    onCheckedChange = onCheckedChange,
-                )
+                Switch(checked = checked, onCheckedChange = onCheckedChange)
             }
         }
     }

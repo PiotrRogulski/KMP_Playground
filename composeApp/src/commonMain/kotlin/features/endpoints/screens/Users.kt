@@ -45,11 +45,11 @@ fun Users(api: ExampleApi = koinInject()) {
     AppScaffold(title = "Users") {
         stickyHeader {
             Surface(
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total users)",
+                        "Page ${page ?: "—"} of ${totalPages ?: "—"} (${data.size} of ${total ?: "—"} total users)"
                     )
                     error?.let {
                         Spacer(modifier = Modifier.height(8.dp))
@@ -85,10 +85,7 @@ fun Users(api: ExampleApi = koinInject()) {
 }
 
 @Composable
-private fun UserCard(
-    user: User,
-    onClick: () -> Unit,
-) {
+private fun UserCard(user: User, onClick: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         onClick = { onClick() },
@@ -110,10 +107,7 @@ private fun UserCard(
                     "${user.firstName} ${user.lastName} (#${user.id})",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                Text(
-                    user.email,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Text(user.email, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

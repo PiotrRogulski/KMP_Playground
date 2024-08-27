@@ -36,7 +36,7 @@ fun AppNavHost(windowClass: WindowSizeClass) {
                 if (widthClass == WindowWidthSizeClass.COMPACT) {
                     BottomNavBar(navController, stackEntry)
                 }
-            },
+            }
         ) { padding ->
             Row {
                 if (widthClass == WindowWidthSizeClass.MEDIUM) {
@@ -69,10 +69,7 @@ private fun BottomNavBar(navController: NavHostController, stackEntry: NavBackSt
 @Composable
 private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEntry?) {
     NavigationRail {
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.Center,
-        ) {
+        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
             NavEntry.entries.forEachIndexed { index, entry ->
                 if (index > 0) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -93,9 +90,7 @@ private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEn
 @Composable
 private fun NavDrawer(navController: NavHostController, stackEntry: NavBackStackEntry?) {
     PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-        ) {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             Spacer(modifier = Modifier.height(12.dp))
             NavEntry.entries.forEach { entry ->
                 NavigationDrawerItem(
@@ -143,26 +138,10 @@ private fun NavContent(navController: NavHostController, modifier: Modifier = Mo
     }
 }
 
-private enum class NavEntry(
-    val route: Any,
-    val label: String,
-    val iconData: ImageVector,
-) {
-    NavHome(
-        Home,
-        "Home",
-        Icons.Rounded.Home,
-    ),
-    NavEndpoints(
-        Endpoints,
-        "Endpoints",
-        Icons.AutoMirrored.Rounded.List,
-    ),
-    NavSettings(
-        Settings,
-        "Settings",
-        Icons.Rounded.Settings,
-    );
+private enum class NavEntry(val route: Any, val label: String, val iconData: ImageVector) {
+    NavHome(Home, "Home", Icons.Rounded.Home),
+    NavEndpoints(Endpoints, "Endpoints", Icons.AutoMirrored.Rounded.List),
+    NavSettings(Settings, "Settings", Icons.Rounded.Settings);
 
     fun isSelected(stackEntry: NavBackStackEntry?) =
         stackEntry?.destination?.hierarchy.orEmpty().let { hierarchy ->
@@ -178,6 +157,5 @@ private enum class NavEntry(
         }
     }
 
-    @Composable
-    fun icon() = Icon(iconData, contentDescription = label)
+    @Composable fun icon() = Icon(iconData, contentDescription = label)
 }

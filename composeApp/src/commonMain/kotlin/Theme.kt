@@ -8,10 +8,7 @@ import org.koin.compose.*
 val seedColor = Color(0xFFFF00FF)
 
 @Composable
-fun AppTheme(
-    settingsStore: SettingsStore = koinInject(),
-    content: @Composable () -> Unit,
-) {
+fun AppTheme(settingsStore: SettingsStore = koinInject(), content: @Composable () -> Unit) {
     val themeMode by settingsStore.themeMode
     val style by settingsStore.themeStyle
     val contrastLevel by settingsStore.contrastLevel
@@ -32,9 +29,5 @@ fun AppTheme(
             contrastLevel = contrastLevel.value,
         )
 
-    DynamicMaterialTheme(
-        state = themeState,
-        animate = true,
-        content = content,
-    )
+    DynamicMaterialTheme(state = themeState, animate = true, content = content)
 }

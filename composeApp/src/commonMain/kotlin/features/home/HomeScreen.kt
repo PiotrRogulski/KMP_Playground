@@ -43,7 +43,7 @@ fun HomeScreen() {
                             }
                         }
                     }
-                },
+                }
             )
         }
         item {
@@ -67,14 +67,10 @@ fun HomeScreen() {
                 Modifier.padding(64.dp).size(250.dp).graphicsLayer {
                     rotationX = angleX
                     rotationY = angleY
-                },
+                }
             ) {
                 Box(Modifier.background(Color.Green).fillMaxSize())
-                Text(
-                    "Box with graphicsLayer",
-                    Modifier.align(Alignment.Center),
-                    Color.Black,
-                )
+                Text("Box with graphicsLayer", Modifier.align(Alignment.Center), Color.Black)
             }
         }
     }

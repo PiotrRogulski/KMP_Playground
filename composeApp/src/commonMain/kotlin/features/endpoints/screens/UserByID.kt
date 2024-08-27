@@ -33,10 +33,7 @@ fun UserByID(userID: Int, api: ExampleApi = koinInject()) {
         }
     }
 
-    AppScaffold(
-        title = "User by ID ($userID)",
-        snackbarHost = { SnackbarHost(snackHostState) },
-    ) {
+    AppScaffold(title = "User by ID ($userID)", snackbarHost = { SnackbarHost(snackHostState) }) {
         data?.let {
             item {
                 Text(
