@@ -75,6 +75,7 @@ kotlin {
             implementation(libs.adaptive)
             implementation(libs.adaptive.layout)
             implementation(libs.adaptive.navigation)
+            implementation(libs.material3.adaptive.navigation.suite)
             implementation(libs.logback.classic)
         }
         desktopMain.dependencies {

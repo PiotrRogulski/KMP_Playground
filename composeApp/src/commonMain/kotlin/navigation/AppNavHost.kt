@@ -1,12 +1,13 @@
 package navigation
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
+import androidx.compose.material3.adaptive.*
+import androidx.compose.material3.adaptive.navigationsuite.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -25,82 +26,45 @@ import navigation.routes.*
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController provided") }
 
 @Composable
-fun AppNavHost(windowClass: WindowSizeClass) {
-    val widthClass = windowClass.windowWidthSizeClass
+fun AppNavHost() {
     val navController = rememberNavController()
     val stackEntry by navController.currentBackStackEntryAsState()
+    val windowInfo = currentWindowAdaptiveInfo()
+    val sizeClass = windowInfo.windowSizeClass.windowWidthSizeClass
+    val layoutType =
+        when (sizeClass) {
+            WindowWidthSizeClass.EXPANDED -> NavigationSuiteType.NavigationDrawer
+            else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(windowInfo)
+        }
+
+    val padding = 12.dp
 
     CompositionLocalProvider(LocalNavController provides navController) {
-        Scaffold(
-            bottomBar = {
-                if (widthClass == WindowWidthSizeClass.COMPACT) {
-                    BottomNavBar(navController, stackEntry)
-                }
-            }
-        ) { padding ->
-            Row {
-                if (widthClass == WindowWidthSizeClass.MEDIUM) {
-                    NavRail(navController, stackEntry)
-                }
-                if (widthClass == WindowWidthSizeClass.EXPANDED) {
-                    NavDrawer(navController, stackEntry)
-                }
-                NavContent(navController, modifier = Modifier.padding(padding).clipToBounds())
-            }
-        }
-    }
-}
+        NavigationSuiteScaffold(
+            layoutType = layoutType,
+            navigationSuiteItems = {
+                NavEntry.entries.forEachIndexed { index, entry ->
+                    item(
+                        modifier =
+                            when (layoutType) {
+                                NavigationSuiteType.NavigationDrawer ->
+                                    Modifier.width(240.dp)
+                                        .padding(horizontal = padding)
+                                        .padding(top = if (index == 0) padding else 0.dp)
 
-@Composable
-private fun BottomNavBar(navController: NavHostController, stackEntry: NavBackStackEntry?) {
-    BottomAppBar {
-        NavEntry.entries.forEach { entry ->
-            val selected = entry.isSelected(stackEntry)
-            NavigationBarItem(
-                selected = selected,
-                onClick = { entry.navigate(navController, stackEntry) },
-                label = { Text(entry.label) },
-                icon = { entry.icon() },
-            )
-        }
-    }
-}
-
-@Composable
-private fun NavRail(navController: NavHostController, stackEntry: NavBackStackEntry?) {
-    NavigationRail {
-        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-            NavEntry.entries.forEachIndexed { index, entry ->
-                if (index > 0) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                                NavigationSuiteType.NavigationRail ->
+                                    Modifier.padding(top = padding)
+                                else -> Modifier
+                            },
+                        selected = entry.isSelected(stackEntry),
+                        onClick = { entry.navigate(navController, stackEntry) },
+                        label = { Text(entry.label) },
+                        icon = { entry.icon() },
+                    )
                 }
-
-                val selected = entry.isSelected(stackEntry)
-                NavigationRailItem(
-                    selected = selected,
-                    onClick = { entry.navigate(navController, stackEntry) },
-                    label = { Text(entry.label) },
-                    icon = { entry.icon() },
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun NavDrawer(navController: NavHostController, stackEntry: NavBackStackEntry?) {
-    PermanentDrawerSheet(modifier = Modifier.width(240.dp)) {
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.height(12.dp))
-            NavEntry.entries.forEach { entry ->
-                NavigationDrawerItem(
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    selected = entry.isSelected(stackEntry),
-                    onClick = { entry.navigate(navController, stackEntry) },
-                    label = { Text(entry.label) },
-                    icon = { entry.icon() },
-                )
-            }
+            },
+        ) {
+            NavContent(navController, modifier = Modifier.clipToBounds())
         }
     }
 }
