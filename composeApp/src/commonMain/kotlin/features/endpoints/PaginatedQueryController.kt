@@ -21,7 +21,7 @@ class PaginatedQueryController<T>(
     val loading: State<Boolean> = _loading
     val error: State<Throwable?> = _error
     val hasMore: State<Boolean> = derivedStateOf {
-        _page.value?.let { page -> _totalPages.value?.let { total -> page < total } } ?: false
+        _page.value?.let { page -> _totalPages.value?.let { total -> page < total } } ?: true
     }
 
     suspend fun loadNextPage() {
